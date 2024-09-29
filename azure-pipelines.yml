@@ -1,0 +1,17 @@
+trigger:
+  branches:
+    include:
+      - main  # O la rama en la que trabajes
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UsePythonVersion@0  # Si tu playbook requiere Python, asegúrate de especificarlo
+  inputs:
+    versionSpec: '3.x'
+
+- script: |
+    ssh -o StrictHostKeyChecking=no azureuser@13.83.4.217 'ansible-playbook -i /Documentos/Ansible/inventory.ini /Documentos/Ansible/deploy.yml'
+  displayName: 'Ejecutar Ansible Playbook en VM'
+
