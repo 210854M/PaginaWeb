@@ -11,19 +11,10 @@ variables:
 
 steps:
 - script: |
-    sudo apt-get update
-    sudo apt-get install python3 python3-pip -y  # Instalar Python en el agente
-  displayName: 'Instalar Python en el agente self-hosted'
-
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
-  env:
-    ACTIONS_RUNTIME_TOKEN: $(MY_GITHUB_TOKEN)  # Usar el token de GitHub para evitar el límite de descargas
-
-- script: |
     ssh -o StrictHostKeyChecking=no azureuser@13.83.4.217 'ansible-playbook -i /Documentos/Ansible/inventory.ini /Documentos/Ansible/deploy.yml'
   displayName: 'Ejecutar Ansible Playbook en VM'
+  env:
+    ACTIONS_RUNTIME_TOKEN: $(MY_GITHUB_TOKEN)  # Usar el token de GitHub para evitar el límite de descargas
 
 
 
