@@ -7,11 +7,16 @@ pool:
   name: 'Default'  # El nombre del Agent Pool donde registraste tu agente self-hosted
 
 steps:
-- task: UsePythonVersion@0  # Si tu playbook requiere Python, asegúrate de especificarlo
+- task: UsePythonVersion@0
   inputs:
     versionSpec: '3.x'
+    addGitHubToken: true  # Indica que quieres usar un token de GitHub
+
+  env:
+    GITHUB_TOKEN: $(GITHUB_TOKEN)  # Usa la variable de entorno para autenticar la descarga
 
 - script: |
     ssh -o StrictHostKeyChecking=no azureuser@13.83.4.217 'ansible-playbook -i /Documentos/Ansible/inventory.ini /Documentos/Ansible/deploy.yml'
   displayName: 'Ejecutar Ansible Playbook en VM'
+
 
