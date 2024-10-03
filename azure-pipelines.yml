@@ -7,18 +7,19 @@ pool:
   name: 'Default'  # El nombre del Agent Pool donde registraste tu agente self-hosted
 
 variables:
-  GITHUB_TOKEN: $(GITHUB_TOKEN)  # Definir el token globalmente
+  MY_GITHUB_TOKEN: $(GITHUB_TOKEN)  # Usar un nombre diferente a 'GITHUB_TOKEN' para evitar referencias cíclicas
 
 steps:
 - task: UsePythonVersion@0
   inputs:
     versionSpec: '3.x'
   env:
-    GITHUB_TOKEN: $(GITHUB_TOKEN)
+    GITHUB_TOKEN: $(MY_GITHUB_TOKEN)  # Usa la variable correcta para evitar conflictos
 
 - script: |
     ssh -o StrictHostKeyChecking=no azureuser@13.83.4.217 'ansible-playbook -i /Documentos/Ansible/inventory.ini /Documentos/Ansible/deploy.yml'
   displayName: 'Ejecutar Ansible Playbook en VM'
+
 
 
 
