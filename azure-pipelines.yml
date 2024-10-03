@@ -11,9 +11,8 @@ variables:
 
 steps:
 - script: |
-    ansible-playbook -i ~/Descargas/Ansible/inventory.ini ~/Descargas/Ansible/deploy.yml
+    ansible-playbook -i ~/Documentos/Ansible/inventory.ini ~/Documentos/Ansible/deploy.yml
   displayName: 'Ejecutar Ansible Playbook localmente'
   env:
     ACTIONS_RUNTIME_TOKEN: $(MY_GITHUB_TOKEN)  # Usar el token de GitHub para evitar el límite de descargas
-
 
