@@ -4,7 +4,7 @@ trigger:
       - main  # O la rama en la que trabajes
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'Default'  # El nombre del Agent Pool donde registraste tu agente self-hosted
 
 steps:
 - task: UsePythonVersion@0  # Si tu playbook requiere Python, asegúrate de especificarlo
