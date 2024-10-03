@@ -7,18 +7,24 @@ pool:
   name: 'Default'  # El nombre del Agent Pool donde registraste tu agente self-hosted
 
 variables:
-  MY_GITHUB_TOKEN: $(GITHUB_TOKEN)  # Usar un nombre diferente a 'GITHUB_TOKEN' para evitar referencias cíclicas
+  MY_GITHUB_TOKEN: $(GITHUB_TOKEN)  # Usar un nombre diferente para evitar referencias cíclicas
 
 steps:
+- script: |
+    sudo apt-get update
+    sudo apt-get install python3 python3-pip -y  # Instalar Python en el agente
+  displayName: 'Instalar Python en el agente self-hosted'
+
 - task: UsePythonVersion@0
   inputs:
     versionSpec: '3.x'
   env:
-    GITHUB_TOKEN: $(MY_GITHUB_TOKEN)  # Usa la variable correcta para evitar conflictos
+    ACTIONS_RUNTIME_TOKEN: $(MY_GITHUB_TOKEN)  # Usar el token de GitHub para evitar el límite de descargas
 
 - script: |
     ssh -o StrictHostKeyChecking=no azureuser@13.83.4.217 'ansible-playbook -i /Documentos/Ansible/inventory.ini /Documentos/Ansible/deploy.yml'
   displayName: 'Ejecutar Ansible Playbook en VM'
+
 
 
 
