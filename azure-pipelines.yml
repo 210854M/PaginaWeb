@@ -16,3 +16,6 @@ steps:
   env:
     ACTIONS_RUNTIME_TOKEN: $(MY_GITHUB_TOKEN)  # Usar el token de GitHub para evitar el límite de descargas
 
+- script: |
+    python3 /var/www/html/tests/test_selenium.py
+  displayName: 'Ejecutar pruebas con Selenium'
