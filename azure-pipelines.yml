@@ -21,5 +21,9 @@ steps:
     ssh azureuser@13.83.4.217 "python3 /var/www/html/tests/test_basicos.py"
   displayName: 'Listar archivos y ejecutar tests basicos con Selenium'
 
+- script: |
+    ssh azureuser@13.83.4.217 "ls -l /var/www/html/tests/"
+    ssh azureuser@13.83.4.217 "python3 /var/www/html/tests/test_footer.py"
+  displayName: 'Listar archivos y ejecutar tests unitario con Selenium'
 
 
