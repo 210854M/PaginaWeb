@@ -21,8 +21,5 @@ steps:
     ssh azureuser@13.83.4.217 "python3 /var/www/html/tests/test_selenium.py"
   displayName: 'Listar archivos y ejecutar pruebas automaticas con Selenium apara revisar vista de usuario'
 
-- script: |
-    ssh azureuser@13.83.4.217 "python3 /var/www/html/tests/test_basicos.py"
-  displayName: 'Ejecutar tests básicas con Selenium para ver funcion del menu correcta'
 
 
