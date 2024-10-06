@@ -16,3 +16,9 @@ steps:
   env:
     ACTIONS_RUNTIME_TOKEN: $(MY_GITHUB_TOKEN)  # Usar el token de GitHub para evitar el límite de descargas
 
+- script: |
+    ssh azureuser@13.83.4.217"ls -l /var/www/html/tests/"
+    ssh azureuser@13.83.4.217 "python3 /var/www/html/tests/test_selenium.py"
+  displayName: 'Listar archivos y ejecutar pruebas con Selenium'
+
+
