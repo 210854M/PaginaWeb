@@ -89,5 +89,6 @@ Ejecutar pruebas unitarias con JUnit.
 Ejecutar pruebas funcionales con Selenium.
 Desplegar los cambios en el servidor Apache.
 Colaboradores
-Ericka Yoseline Escalera Velasco - Desarrollo y Pruebas
+Ericka Yoseline Escalera Velasco - Mariana Alejandra Rodriguez Escobedo.
+Desarrollo y Pruebas
  
