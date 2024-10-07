@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validar que todos los campos estén completos
     if (!empty($nombre) && !empty($correo) && !empty($comentarios)) {
         // Configurar el correo
-        $destinatario = "yosivelasco123@gmail.com"; // Cambia por el correo donde recibirás los mensajes
+        $destinatario = "tucorreo@example.com"; // Cambia por el correo donde recibirás los mensajes
         $asunto = "Nuevo mensaje de contacto de: $nombre";
         $mensaje = "Nombre: $nombre\n";
         $mensaje .= "Correo: $correo\n";
@@ -20,7 +20,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $headers .= "Content-type: text/plain; charset=UTF-8\r\n";
 
         // Enviar el correo
-        
-    } 
+        if (mail($destinatario, $asunto, $mensaje, $headers)) {
+            // Si se envió correctamente, redirigir o mostrar un mensaje de éxito
+            echo "¡Gracias, tu mensaje ha sido enviado con éxito!";
+        } else {
+            // Si hubo un problema al enviar el correo
+            echo "Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.";
+        }
+    } else {
+        // Si faltan datos en el formulario
+        echo "Por favor, completa todos los campos.";
+    }
 }
 ?>
