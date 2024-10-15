@@ -11,9 +11,8 @@ function validate_user_input($input) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = validate_user_input($_POST['username']);
     $password = validate_user_input($_POST['password']);
-    $phone = validate_user_input($_POST['phone']); // Obtener número de teléfono
 
-    // Verificar usuario
+    // Verificar usuario y obtener el número de teléfono
     $sql = "SELECT * FROM usuarios WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
@@ -22,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
+        $phone = $user['phone'];  // Obtener el número de teléfono desde la base de datos
 
         // Verificar la contraseña
         if (password_verify($password, $user['password'])) {

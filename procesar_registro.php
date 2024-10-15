@@ -1,13 +1,10 @@
 <?php
-// Incluir el archivo de conexión
+// Incluir archivo de conexión
 include 'conexion.php';
 
 // Función para sanitizar y validar entradas
 function validate_user_input($input) {
-    $input = trim($input); // Eliminar espacios innecesarios
-    $input = stripslashes($input); // Eliminar barras invertidas
-    $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8'); // Convertir caracteres especiales en entidades HTML
-    return $input;
+    return htmlspecialchars(trim(stripslashes($input)), ENT_QUOTES, 'UTF-8');
 }
 
 // Verificar si el formulario fue enviado
@@ -15,8 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener los datos del formulario
     $username = validate_user_input($_POST['username']);
     $password = validate_user_input($_POST['password']);
+    $phone = validate_user_input($_POST['phone']);  // Obtener el número de teléfono
 
-    // Verificar que el nombre de usuario no exista ya
+    // Verificar si el nombre de usuario ya existe
     $sql = "SELECT * FROM usuarios WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
@@ -29,9 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // Insertar los datos en la base de datos con la contraseña encriptada
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO usuarios (username, password) VALUES (?, ?)";
+        $sql = "INSERT INTO usuarios (username, password, phone) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $username, $hashed_password);
+        $stmt->bind_param("sss", $username, $hashed_password, $phone);  // Incluyendo el teléfono
 
         if ($stmt->execute()) {
             // Redirigir al usuario a la página de inicio de sesión después del registro exitoso
