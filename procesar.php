@@ -1,6 +1,15 @@
 <?php
-// Incluir el archivo de PHPMailer
+// Incluir PHPMailer y autoload de Composer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Incluir los archivos de PHPMailer
 require 'vendor/autoload.php';
+
+// Habilitar visualización de errores para depurar
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 include 'conexion.php';
 session_start();
@@ -32,31 +41,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['mfa_code'] = $mfa_code;  // Guardar el código en la sesión
             $_SESSION['username'] = $username;  // Guardar el usuario en la sesión
 
-            // Enviar el código MFA por correo electrónico usando PHPMailer
-            $mail = new PHPMailer\PHPMailer\PHPMailer();
+            // Crear instancia de PHPMailer
+            $mail = new PHPMailer(true);
 
-            // Configuración de SMTP
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';  // Usamos el servidor SMTP de Gmail
-            $mail->SMTPAuth = true;
-            $mail->Username = 'yosivelasco123@gmail.com';  // Tu correo de Gmail
-            $mail->Password = 'volkway16';  // Tu contraseña de Gmail
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+            try {
+                // Configuración del servidor SMTP
+                $mail->isSMTP();  // Usar SMTP
+                $mail->Host = 'smtp.gmail.com';  // Servidor SMTP de Gmail
+                $mail->SMTPAuth = true;  // Habilitar autenticación SMTP
+                $mail->Username = 'yosivelasco123@gmail.com';  // Tu dirección de Gmail
+                $mail->Password = 'volkway16';  // Tu App Password de Gmail o tu contraseña normal
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  // Protocolo de encriptación TLS
+                $mail->Port = 587;  // Puerto TLS de Gmail
 
-            // Receptor y contenido del correo
-            $mail->setFrom('yosivelasco123@gmail.com', 'Tu Nombre');
-            $mail->addAddress($email);  // El correo del destinatario (usuario)
-            $mail->Subject = 'Tu código de autenticación MFA';
-            $mail->Body = "Tu código de autenticación es: $mfa_code";
+                // Configuración del correo
+                $mail->setFrom('yosivelasco@gmail.com', 'Tu Nombre');  // Remitente
+                $mail->addAddress($email);  // El correo del destinatario (usuario)
+                $mail->Subject = 'Tu código de autenticación MFA';  // Asunto del correo
+                $mail->Body = "Tu código de autenticación es: $mfa_code";  // Cuerpo del correo
 
-            // Enviar el correo
-            if ($mail->send()) {
-                // Redirigir al formulario MFA
-                header("Location: mfa.html");
-                exit();
-            } else {
-                echo "Error al enviar el correo: " . $mail->ErrorInfo;
+                // Enviar el correo
+                if ($mail->send()) {
+                    // Redirigir al formulario MFA
+                    header("Location: mfa.html");
+                    exit();
+                } else {
+                    echo "Error al enviar el correo: " . $mail->ErrorInfo;
+                }
+
+            } catch (Exception $e) {
+                echo "Error al enviar el correo: {$mail->ErrorInfo}";
             }
         } else {
             // Contraseña incorrecta
@@ -66,6 +80,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Usuario no encontrado
         echo "Usuario no encontrado.";
     }
+
     $stmt->close();
     $conn->close();
 }
+?>
