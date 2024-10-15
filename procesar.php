@@ -50,12 +50,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->Host = 'smtp.gmail.com';  // Servidor SMTP de Gmail
                 $mail->SMTPAuth = true;  // Habilitar autenticación SMTP
                 $mail->Username = 'yosivelasco123@gmail.com';  // Tu dirección de Gmail
-                $mail->Password = 'volkway16';  // Tu App Password de Gmail o tu contraseña normal
+                $mail->Password = 'volkway16';  // Tu contraseña normal de Gmail (NO App Password si no tienes 2FA)
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  // Protocolo de encriptación TLS
                 $mail->Port = 587;  // Puerto TLS de Gmail
 
+                // Activar el modo de depuración para ver los detalles de la conexión SMTP
+                $mail->SMTPDebug = 2;  // Modo de depuración (verifica los logs del servidor)
+
                 // Configuración del correo
-                $mail->setFrom('yosivelasco@gmail.com', 'Tu Nombre');  // Remitente
+                $mail->setFrom('yosivelasco123@gmail.com', 'Tu Nombre');  // Remitente (asegúrate que sea el mismo correo de Gmail)
                 $mail->addAddress($email);  // El correo del destinatario (usuario)
                 $mail->Subject = 'Tu código de autenticación MFA';  // Asunto del correo
                 $mail->Body = "Tu código de autenticación es: $mfa_code";  // Cuerpo del correo
