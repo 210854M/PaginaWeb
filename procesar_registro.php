@@ -2,11 +2,19 @@
 // Incluir el archivo de conexión
 include 'conexion.php';
 
+// Función para sanitizar y validar entradas
+function validate_user_input($input) {
+    $input = trim($input); // Eliminar espacios innecesarios
+    $input = stripslashes($input); // Eliminar barras invertidas
+    $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8'); // Convertir caracteres especiales en entidades HTML
+    return $input;
+}
+
 // Verificar si el formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener los datos del formulario
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = validate_user_input($_POST['username']);
+    $password = validate_user_input($_POST['password']);
 
     // Verificar que el nombre de usuario no exista ya
     $sql = "SELECT * FROM usuarios WHERE username = ?";

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de MFA</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Opcional -->
+</head>
+<body>
+    <div style="height: 75vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <!-- Cuadro celeste con formulario de MFA -->
+        <div class="mt-5 p-4 text-center" style="background-color: #add8e6; border-radius: 15px; width: 300px;">
+            <h2 class="titulo c-marino mb-4">Verificación MFA</h2>
+
+            <!-- Formulario para ingresar el código MFA -->
+            <form method="post" action="verificar_mfa.php">
+                <div class="mb-3">
+                    <label for="mfa_code" class="form-label">Código de autenticación:</label>
+                    <input type="text" class="form-control" id="mfa_code" name="mfa_code" placeholder="Ingresa tu código MFA" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Verificar</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
