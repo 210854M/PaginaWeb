@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Enviar el código MFA por correo electrónico
             $subject = "Tu código de autenticación MFA";
             $message = "Tu código de autenticación es: $mfa_code";
-            $headers = "From: no-reply@tusitio.com";
+            $headers = "From: yosivelasco123@gmail.com";
 
             // Usar la función mail() para enviar el correo
             if (mail($email, $subject, $message, $headers)) {
