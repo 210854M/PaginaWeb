@@ -1,5 +1,7 @@
 <?php
-// Incluir archivo de conexión
+// Incluir el archivo de PHPMailer
+require 'vendor/autoload.php';
+
 include 'conexion.php';
 session_start();
 
@@ -30,18 +32,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['mfa_code'] = $mfa_code;  // Guardar el código en la sesión
             $_SESSION['username'] = $username;  // Guardar el usuario en la sesión
 
-            // Enviar el código MFA por correo electrónico
-            $subject = "Tu código de autenticación MFA";
-            $message = "Tu código de autenticación es: $mfa_code";
-            $headers = "From: yosivelasco123@gmail.com";
+            // Enviar el código MFA por correo electrónico usando PHPMailer
+            $mail = new PHPMailer\PHPMailer\PHPMailer();
 
-            // Usar la función mail() para enviar el correo
-            if (mail($email, $subject, $message, $headers)) {
+            // Configuración de SMTP
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';  // Usamos el servidor SMTP de Gmail
+            $mail->SMTPAuth = true;
+            $mail->Username = 'yosivelasco123@gmail.com';  // Tu correo de Gmail
+            $mail->Password = 'volkway16';  // Tu contraseña de Gmail
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            // Receptor y contenido del correo
+            $mail->setFrom('yosivelasco123@gmail.com', 'Tu Nombre');
+            $mail->addAddress($email);  // El correo del destinatario (usuario)
+            $mail->Subject = 'Tu código de autenticación MFA';
+            $mail->Body = "Tu código de autenticación es: $mfa_code";
+
+            // Enviar el correo
+            if ($mail->send()) {
                 // Redirigir al formulario MFA
                 header("Location: mfa.html");
                 exit();
             } else {
-                echo "Error al enviar el correo.";
+                echo "Error al enviar el correo: " . $mail->ErrorInfo;
             }
         } else {
             // Contraseña incorrecta
@@ -54,4 +69,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
     $conn->close();
 }
-?>
