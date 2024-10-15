@@ -52,9 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $context  = stream_context_create($options);
             $result = file_get_contents($url, false, $context);
             echo $result; 
-            // Redirigir al formulario MFA
-            header("Location: mfa.html");
-            exit();
+            
         } else {
             // Contraseña incorrecta
             echo "Usuario o contraseña incorrectos.";
