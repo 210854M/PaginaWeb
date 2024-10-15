@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener los datos del formulario
     $username = validate_user_input($_POST['username']);
     $password = validate_user_input($_POST['password']);
-    $phone = validate_user_input($_POST['phone']);  // Obtener el número de teléfono
+    $email = validate_user_input($_POST['email']);  // Obtener el correo electrónico
 
     // Verificar si el nombre de usuario ya existe
     $sql = "SELECT * FROM usuarios WHERE username = ?";
@@ -27,9 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // Insertar los datos en la base de datos con la contraseña encriptada
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO usuarios (username, password, phone) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO usuarios (username, password, email) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sss", $username, $hashed_password, $phone);  // Incluyendo el teléfono
+        $stmt->bind_param("sss", $username, $hashed_password, $email);  // Incluyendo el correo
 
         if ($stmt->execute()) {
             // Redirigir al usuario a la página de inicio de sesión después del registro exitoso

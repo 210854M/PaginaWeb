@@ -15,4 +15,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Código MFA incorrecto.";
     }
 }
-?>

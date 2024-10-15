@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = validate_user_input($_POST['username']);
     $password = validate_user_input($_POST['password']);
 
-    // Verificar usuario y obtener el número de teléfono
+    // Verificar usuario y obtener el correo electrónico
     $sql = "SELECT * FROM usuarios WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
-        $phone = $user['phone'];  // Obtener el número de teléfono desde la base de datos
+        $email = $user['email'];  // Obtener el correo electrónico desde la base de datos
 
         // Verificar la contraseña
         if (password_verify($password, $user['password'])) {
@@ -30,29 +30,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['mfa_code'] = $mfa_code;  // Guardar el código en la sesión
             $_SESSION['username'] = $username;  // Guardar el usuario en la sesión
 
-            // Enviar el código MFA al número de teléfono usando Textbelt
-            $url = 'https://textbelt.com/text';
+            // Enviar el código MFA por correo electrónico
+            $subject = "Tu código de autenticación MFA";
+            $message = "Tu código de autenticación es: $mfa_code";
+            $headers = "From: no-reply@tusitio.com";
 
-            // Datos para enviar el mensaje
-            $data = [
-                'phone' => '+52' . $phone,  // Asegúrate de incluir el código de país
-                'message' => "Tu código de autenticación es: $mfa_code",
-                'key' => 'textbelt'  // Clave API gratuita
-            ];
-
-            // Configurar los headers y enviar la solicitud POST
-            $options = [
-                'http' => [
-                    'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                    'method'  => 'POST',
-                    'content' => http_build_query($data),
-                ],
-            ];
-
-            $context  = stream_context_create($options);
-            $result = file_get_contents($url, false, $context);
-            echo $result; 
-            
+            // Usar la función mail() para enviar el correo
+            if (mail($email, $subject, $message, $headers)) {
+                // Redirigir al formulario MFA
+                header("Location: mfa.html");
+                exit();
+            } else {
+                echo "Error al enviar el correo.";
+            }
         } else {
             // Contraseña incorrecta
             echo "Usuario o contraseña incorrectos.";
