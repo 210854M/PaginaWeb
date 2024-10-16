@@ -1,18 +1,25 @@
 <?php
-// Incluir archivo de conexión
-include 'conexion.php';
+// Incluir PHPMailer y autoload de Composer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-// Función para sanitizar y validar entradas
+require 'vendor/autoload.php'; // Incluye PHPMailer
+include 'conexion.php'; // Incluir conexión a la base de datos
+
+session_start();
+
+// Función para generar un código MFA de 6 dígitos
+function generarCodigoMFA() {
+    return rand(100000, 999999);  // Genera un código aleatorio de 6 dígitos
+}
+
+// Función para sanitizar entradas del usuario
 function validate_user_input($input) {
-    $input = trim($input); // Eliminar espacios innecesarios
-    $input = stripslashes($input); // Eliminar barras invertidas
-    $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8'); // Convertir caracteres especiales en entidades HTML
-    return $input;
+    return htmlspecialchars(trim(stripslashes($input)), ENT_QUOTES, 'UTF-8');
 }
 
 // Verificar si el formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener datos del formulario
     $username = validate_user_input($_POST['username']);
     $password = validate_user_input($_POST['password']);
 
@@ -30,10 +37,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Verificar la contraseña usando password_verify()
         if (password_verify($password, $user['password'])) {
-            // Contraseña correcta
-            // Redirigir al usuario a index.html
-            header("Location: indexsin.html");
-            exit();
+            // Generar el código MFA
+            $mfa_code = generarCodigoMFA();
+            $_SESSION['mfa_code'] = $mfa_code;  // Guardar el código en la sesión
+            $_SESSION['username'] = $username;  // Guardar el nombre de usuario en la sesión
+            
+            // Obtener el correo electrónico del usuario desde la base de datos
+            $correo_usuario = $user['email'];
+
+            // Enviar el código MFA al correo del usuario
+            $mail = new PHPMailer(true);
+
+            try {
+                // Configuración del servidor SMTP
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';  // Servidor SMTP de Gmail
+                $mail->SMTPAuth = true;
+                $mail->Username = 'yosivelasco123@gmail.com';  // Tu dirección de correo Gmail
+                $mail->Password = 'volkway16';  // Tu App Password de Gmail
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = 587;  // Puerto TLS
+
+                // Configuración del correo
+                $mail->setFrom('yosivelasco123@gmail.com', 'Tu Nombre');  // Remitente
+                $mail->addAddress($correo_usuario);  // El correo del destinatario (usuario)
+                $mail->Subject = 'Tu código de autenticación MFA';  // Asunto del correo
+                $mail->Body = "Tu código de autenticación es: $mfa_code";  // Cuerpo del correo
+
+                // Enviar el correo
+                if ($mail->send()) {
+                    // Redirigir al formulario donde se ingresa el código MFA
+                    header("Location: verificar_mfa.php");
+                    exit();
+                } else {
+                    echo "Error al enviar el correo: " . $mail->ErrorInfo;
+                }
+            } catch (Exception $e) {
+                echo "Error al enviar el correo: {$mail->ErrorInfo}";
+            }
         } else {
             // Contraseña incorrecta
             echo "Usuario o contraseña incorrectos.";

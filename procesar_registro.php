@@ -1,20 +1,19 @@
 <?php
-// Incluir archivo de conexión
+// Incluir el archivo de conexión
 include 'conexion.php';
 
-// Función par sanitizar y validar entradas
+// Función para sanitizar entradas
 function validate_user_input($input) {
     return htmlspecialchars(trim(stripslashes($input)), ENT_QUOTES, 'UTF-8');
 }
 
 // Verificar si el formulario fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener los datos del formulario
     $username = validate_user_input($_POST['username']);
     $password = validate_user_input($_POST['password']);
-    $email = validate_user_input($_POST['email']);  // Obtener el correo electrónico
+    $email = validate_user_input($_POST['email']);
 
-    // Verificar si el nombre de usuario ya existe
+    // Verificar que el nombre de usuario no exista ya
     $sql = "SELECT * FROM usuarios WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
@@ -29,10 +28,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $sql = "INSERT INTO usuarios (username, password, email) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sss", $username, $hashed_password, $email);  // Incluyendo el correo
+        $stmt->bind_param("sss", $username, $hashed_password, $email);
 
         if ($stmt->execute()) {
-            // Redirigir al usuario a la página de inicio de sesión después del registro exitoso
+            // Redirigir al usuario a la página de inicio de sesión
             header("Location: login.html");
             exit();
         } else {

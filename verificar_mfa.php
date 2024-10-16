@@ -1,17 +1,25 @@
 <?php
 session_start();
 
-// Verificar el código MFA
+// Verificar si el código fue ingresado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $mfa_code = $_POST['mfa_code'];
+    $codigo_ingresado = $_POST['mfa_code'];
 
-    // Comparar el código ingresado con el guardado en la sesión
-    if ($mfa_code == $_SESSION['mfa_code']) {
-        // MFA exitoso, redirigir al sistema
-        echo "Autenticación completada. Redirigiendo...";
-        header("Location: indexsin.html"); // Redirige a la página principal
+    // Verificar si el código ingresado coincide con el código guardado en la sesión
+    if ($codigo_ingresado == $_SESSION['mfa_code']) {
+        echo "Código correcto. Acceso concedido.";
+        // Redirigir al usuario a la página principal (indexsin.html o similar)
+        header("Location: indexsin.html");
         exit();
     } else {
-        echo "Código MFA incorrecto.";
+        echo "Código incorrecto. Inténtalo de nuevo.";
     }
 }
+?>
+
+<!-- Formulario para ingresar el código MFA -->
+<form action="verificar_mfa.php" method="post">
+    <label for="mfa_code">Código de verificación:</label>
+    <input type="text" name="mfa_code" required>
+    <input type="submit" value="Verificar">
+</form>
