@@ -2,19 +2,15 @@
 // Incluir PHPMailer y autoload de Composer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
-require 'vendor/autoload.php'; // Incluye PHPMailer
-include 'conexion.php'; // Incluir conexión a la base de datos
+require 'vendor/autoload.php';  // Incluye PHPMailer
+include 'conexion.php';  // Incluir conexión a la base de datos
 
 session_start();
-
-$mail->SMTPDebug = 2;  // Activa la depuración
-$mail->Debugoutput = 'html';  // La salida de los mensajes de depuración será en HTML
-
 
 // Función para generar un código MFA de 6 dígitos
 function generarCodigoMFA() {
@@ -53,8 +49,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Obtener el correo electrónico del usuario desde la base de datos
             $correo_usuario = $user['email'];
 
-            // Enviar el código MFA al correo del usuario
+            // Crear instancia de PHPMailer
             $mail = new PHPMailer(true);
+
+            // Activa el modo de depuración DESPUÉS de crear el objeto PHPMailer
+            $mail->SMTPDebug = 2;  // Activa la depuración
+            $mail->Debugoutput = 'html';  // La salida de los mensajes de depuración será en HTML
 
             try {
                 // Configuración del servidor SMTP
