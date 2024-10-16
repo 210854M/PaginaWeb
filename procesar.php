@@ -2,6 +2,10 @@
 // Incluir PHPMailer y autoload de Composer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 require 'vendor/autoload.php'; // Incluye PHPMailer
 include 'conexion.php'; // Incluir conexión a la base de datos
