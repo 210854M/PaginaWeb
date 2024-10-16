@@ -12,6 +12,10 @@ include 'conexion.php'; // Incluir conexión a la base de datos
 
 session_start();
 
+$mail->SMTPDebug = 2;  // Activa la depuración
+$mail->Debugoutput = 'html';  // La salida de los mensajes de depuración será en HTML
+
+
 // Función para generar un código MFA de 6 dígitos
 function generarCodigoMFA() {
     return rand(100000, 999999);  // Genera un código aleatorio de 6 dígitos
