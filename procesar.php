@@ -6,7 +6,7 @@ use PHPMailer\PHPMailer\Exception;
 // Incluir los archivos de PHPMailer
 require 'vendor/autoload.php';
 
-// Habilitar visualización de errores para depurar
+// Habilita visualización de errores para depurar
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);

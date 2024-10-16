@@ -2,7 +2,7 @@
 // Incluir archivo de conexión
 include 'conexion.php';
 
-// Función para sanitizar y validar entradas
+// Función par sanitizar y validar entradas
 function validate_user_input($input) {
     return htmlspecialchars(trim(stripslashes($input)), ENT_QUOTES, 'UTF-8');
 }
