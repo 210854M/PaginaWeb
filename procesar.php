@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->Port = 587;  // Puerto TLS
 
                 // Configuración del correo
-                $mail->setFrom('yosivelasco123@gmail.com', 'Tu Nombre');  // Remitente
+                $mail->setFrom('yosiescalera1013@gmail.com', 'Tu Nombre');  // Remitente
                 $mail->addAddress($correo_usuario);  // El correo del destinatario (usuario)
                 $mail->Subject = 'Tu código de autenticación MFA';  // Asunto del correo
                 $mail->Body = "Tu código de autenticación es: $mfa_code";  // Cuerpo del correo
